@@ -13,7 +13,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module IssuesHelperPatch
+module QueriesHelperPatch
 	def self.included(base)
 		base.class_eval do
 
@@ -61,14 +61,14 @@ module IssuesHelperPatch
 			      				link_to_if(User.current.allowed_to?(:manage_public_query_wrappers, nil, :global => true) || !visibility,'', "javascript:;", :class => 'icon icon-edit', :onclick => "$('.show_wrap_'+"+w.id.to_s+").toggle();$('.edit_wrap_'+"+w.id.to_s+").toggle();"),
 			      			:class => 'show_wrap_'+w.id.to_s)+
 			      			content_tag('li',
-			      				render(:partial => 'queries_views/edit_form_query_wrapper', :locals => {:object => w})+			
+			      				render(:partial => 'queries_views/edit_form_query_wrapper', :locals => {:object => w})+
 								link_to(l(:cancel_button), "javascript:;", :onclick => "$('.show_wrap_'+"+w.id.to_s+").toggle();$('.edit_wrap_'+"+w.id.to_s+").toggle();"),
 			      			:class => 'edit_wrap_'+w.id.to_s, :style => "display:none;")+
 			      			content_tag('ul',
 			      				queries_for_wrapper(queries,w).collect{|q|
 			      					css = 'query'
 			           				css << ' selected' if q == @query
-			      					content_tag('li', link_to(q.name, url_params.merge(:query_id => q), :class => css))	      					
+			      					content_tag('li', link_to(q.name, url_params.merge(:query_id => q), :class => css))
 			      				}.join("\n").html_safe,
 			      			:class => 'queries content_wrap_id_'+w.id.to_s, :style => "display:none;margin-left:25px;")
 			    		}.join("\n").html_safe
@@ -92,10 +92,10 @@ module IssuesHelperPatch
 			      : '')
 			end
 
-			def render_sidebar_queries_with_plugin #Override with a boolean parameter
+			def render_sidebar_queries_with_plugin(klass, project) #Override with a boolean parameter
 			    out = ''.html_safe
-			    out << query_links(l(:label_my_queries), sidebar_queries.select(&:is_private?), false)
-			    out << query_links(l(:label_query_plural), sidebar_queries.reject(&:is_private?), true)
+			    out << query_links(l(:label_my_queries), sidebar_queries(klass, project).select(&:is_private?), false)
+			    out << query_links(l(:label_query_plural), sidebar_queries(klass, project).reject(&:is_private?), true)
 			    out
 			end
 

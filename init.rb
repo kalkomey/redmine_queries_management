@@ -17,8 +17,8 @@ require 'redmine'
 require_dependency 'queries_hooks/hook' #Apply views modifications
 
 Rails.configuration.to_prepare do
-	require_dependency 'issues_helper_patch' #Applu patch
-	IssuesHelper.send(:include, IssuesHelperPatch)
+  require_dependency 'queries_helper_patch' #Apply patch
+  QueriesHelper.send(:include, QueriesHelperPatch)
 end
 
 Redmine::Plugin.register :redmine_queries_management do
@@ -30,6 +30,6 @@ Redmine::Plugin.register :redmine_queries_management do
   author_url ''
 
   project_module :issue_tracking do
-  	permission :manage_public_query_wrappers, :query_wrapper => [:create, :edit, :destroy, :update]
+    permission :manage_public_query_wrappers, :query_wrapper => [:create, :edit, :destroy, :update]
   end
 end
